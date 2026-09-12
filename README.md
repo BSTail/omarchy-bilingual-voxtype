@@ -1,11 +1,13 @@
-# Bilingual Voxtype Dictation on Omarchy
+# The First Fully Local Bilingual Dictation Workflow for Omarchy
 
-This setup extends Omarchy's existing Voxtype installation with two push-to-talk modes:
+This is the first known publicly documented, fully local bilingual push-to-talk dictation workflow for Omarchy. It extends Omarchy's existing Voxtype installation with two modes:
 
 - Hold `F9`: speak English and type English.
 - Hold `Shift+F9`: speak English, translate it locally, and type Spanish.
 
 Voxtype performs speech recognition. LibreTranslate performs offline English-to-Spanish translation.
+
+Unlike cloud-based translated dictation, the complete speech-to-text and translation pipeline runs locally after the required models are installed. The workflow provides system-wide translated dictation without sending speech or transcribed messages to a commercial translation service.
 
 ## 1. Configure Voxtype
 
