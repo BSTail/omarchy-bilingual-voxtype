@@ -32,6 +32,37 @@ Restart Voxtype:
 systemctl --user restart voxtype.service
 ```
 
+### Enable Vulkan GPU acceleration (recommended)
+
+On a machine with an Intel Arc, AMD, or NVIDIA GPU, switch Voxtype to the Vulkan binary for a large transcription speedup:
+
+```bash
+pkexec voxtype setup variant --to voxtype-vulkan
+systemctl --user restart voxtype.service
+```
+
+Verify the GPU is in use:
+
+```bash
+voxtype info accel
+```
+
+Look for `State: gpu` and `Backend: vulkan`. To revert to CPU:
+
+```bash
+pkexec voxtype setup variant --to voxtype-avx2
+systemctl --user restart voxtype.service
+```
+
+Measured with the multilingual Whisper `small` model on an Intel Core Ultra 7 258V (Intel Arc GPU, Mesa Vulkan driver):
+
+| Backend | 11s of speech | Realtime factor |
+|---|---|---|
+| CPU (AVX2) | ~4.2s per ~6s phrase | ~0.7x (slower than real time) |
+| Vulkan (Intel Arc) | 0.60s | ~18x |
+
+Vulkan is roughly a 25x speedup over CPU-only transcription with the same model. Dictation remains fully local; only the inference backend changes.
+
 ## 2. Install LibreTranslate
 
 Install `pipx`, then install LibreTranslate:
@@ -266,6 +297,7 @@ omarchy menu keybindings --print | grep -E 'F9|dictation'
 ## Notes
 
 - Speech recognition and translation run locally after the models are installed.
+- On GPU-capable machines, the Vulkan variant is strongly recommended; CPU-only transcription with the `small` model is slower than real time, while Vulkan reaches roughly 18x real time.
 - LibreTranslate starts automatically at login.
 - The dispatcher uses unique transcript files and a lock to prevent duplicate output.
 - Translated output is normalized to one line so chat applications cannot treat embedded newlines as message submission.
